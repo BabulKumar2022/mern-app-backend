@@ -11,24 +11,14 @@ app.use(cors());
 app.use(express.json());
 
 
-// const connectDB = async () =>  {
-//     mongoose.connect("mongodb://127.0.0.1:27017/DB_DB");
-//     const productSchema = new  mongoose.Schema({});
-//     const product = mongoose.model("products", productSchema);
-//     const data = await product.find();
-//     console.log(data);  
-// }
-// connectDB();    
 
-// mongoose.connect(url, {})
-// .then(result => console.log(" DB is connected"))
-// .catch(err =>{console.log(err)});
-
+// user post API
 
 app.post("/users",  async (req, res) =>{
         let user = new User(req.body);
         let result = await user.save()
-    res.send(result);
+    res.send(result); 
+    
 });
 
 
