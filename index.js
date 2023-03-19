@@ -21,7 +21,22 @@ app.post("/users",  async (req, res) =>{
     
 });
 
-
+//user login
+app.post("/login", async(req, res) =>{
+    if(req.body.password && req.body.email){
+        let user = await User.findOne(req.body);
+        if(user){
+            res.send(user);
+        }else{
+            res.send({result:"wrong user or password "});
+        }
+       
+    }else{
+        res.send({result:"wrong user or password "});
+    }
+   
+   
+})
 
 
 app.get("/", (req, res)=>{
