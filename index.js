@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 // const url = "mongodb://127.0.0.1:27017/DB_DB";
 const port =5000; 
+
 dotenv.config();  
 app.use(cors());
 app.use(express.json());
@@ -16,15 +17,17 @@ app.use(express.json());
 
 app.post("/users",  async (req, res) =>{
         let user = new User(req.body);
-        let result = await user.save()
+        let result = await user.save();
+        result = result.toObject();
+        delete result.password
     res.send(result); 
     
 });
 
-//user login
+//user login 
 app.post("/login", async(req, res) =>{
     if(req.body.password && req.body.email){
-        let user = await User.findOne(req.body);
+        let user = await User.findOne(req.body).select("-password");
         if(user){
             res.send(user);
         }else{
@@ -32,7 +35,7 @@ app.post("/login", async(req, res) =>{
         }
        
     }else{
-        res.send({result:"wrong user or password "});
+        res.send({result:"user not found "});
     }
    
    
