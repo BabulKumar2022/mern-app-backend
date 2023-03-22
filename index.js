@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 require("./db/config");
 const User = require('./db/User');
+const Product = require('./db/Product')
 const dotenv = require("dotenv");
 const cors = require("cors");
 // const url = "mongodb://127.0.0.1:27017/DB_DB";
@@ -39,6 +40,15 @@ app.post("/login", async(req, res) =>{
     }
    
    
+});
+
+// add product
+
+app.post("/addProduct", async(req, res)=>{
+
+    let product = new Product(req.body);
+    let result = await product.save();
+    res.send(result);
 })
 
 
