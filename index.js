@@ -5,6 +5,7 @@ const User = require('./db/User');
 const Product = require('./db/Product')
 const dotenv = require("dotenv");
 const cors = require("cors");
+const Products2 = require("./db/Products2");
 // const url = "mongodb://127.0.0.1:27017/DB_DB";
 const port =5000; 
 
@@ -50,6 +51,17 @@ app.post("/addProduct", async(req, res)=>{
     let result = await product.save();
     res.send(result);
 });
+
+
+app.post("/addProduct2", async(req, res)=>{
+
+    let product = new Products2(req.body);
+    let result = await product.save();
+    res.send(result);
+});
+
+
+
 // get all products
 app.get("/products", async (req, res) =>{
     const products = await Product.find();
@@ -59,10 +71,35 @@ app.get("/products", async (req, res) =>{
         res.send({result: "No product found"})
     }
 });
+
+
+
+// get all products2
+app.get("/products2", async (req, res) =>{
+    const products2 = await Products2.find();
+    if(products2.length > 0){
+        res.send(products2);
+    }else{
+        res.send({result: "No product found"})
+    }
+});
+
+  
+
+// Delete product API
 app.delete("/products/:id", async (req, res)=>{
     let result = await Product.deleteOne({_id:req.params.id})
     res.send(result);
 });
+
+// Delete product2 API
+app.delete("/products2/:id", async (req, res)=>{
+    let result = await Products2.deleteOne({_id:req.params.id})
+    res.send(result);
+});
+
+
+
 // get single product for update
 app.get("/products/:id", async (req, res)=>{
     let result = await Product.findOne({_id:req.params.id});
@@ -81,8 +118,23 @@ app.put("/products/:id", async (req, res)=>{
         {$set: req.body}
     )
     res.send(result)
-})
+});
 
+  
+// search by key
+
+app.get("/search/:key", async (req, res)=>{
+    let result = await Product.find({
+        "$or":[
+            {
+                ac: {$regex: req.params.key}
+            }
+        ]
+    }); 
+    res.send(result);
+});
+
+  
 
 app.get("/", (req, res)=>{
     res.send("Backend is successfully running");
